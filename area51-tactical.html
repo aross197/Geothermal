@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AREA 51 TACTICAL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --accent: #39FF14;
+            --accent-dark: #32cd10;
+            --bg: #0a0a0c;
+            --card: #14141a;
+            --border: #222;
+            --text: #e0e0e0;
+            --cyan: #00ffff;
+            --red: #ff3333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+            padding: 20px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--accent);
+            text-align: center;
+            font-weight: 900;
+            letter-spacing: 3px;
+            font-size: 2.1rem;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+            font-family: "Space Grotesk", system-ui, sans-serif;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+        
+        .status-bar {
+            display: flex;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+        
+        .status-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .status-item span {
+            opacity: 0.9;
+        }
+        
+        #battery, #signal {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .sync-btn {
+            width: 100%;
+            background-color: var(--accent);
+            color: #000000;
+            font-weight: 800;
+            font-size: 1.05rem;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.23, 1.0, 0.32, 1);
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(57, 255, 20, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+        }
+        
+        .sync-btn:hover:not(:disabled) {
+            background-color: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(57, 255, 20, 0.35);
+        }
+        
+        .sync-btn:active:not(:disabled) {
+            transform: scale(0.985);
+        }
+        
+        .sync-btn:disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        .intel-feed {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            background-color: #111;
+        }
+        
+        .card-body {
+            padding: 18px 20px 22px;
+        }
+        
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 10px;
+        }
+        
+        .tag {
+            background-color: var(--accent);
+            color: #000000;
+            font-weight: 800;
+            font-size: 0.82rem;
+            padding: 6px 14px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        
+        .tag-age {
+            background-color: var(--cyan);
+            color: #000000;
+            font-weight: 800;
+            font-size: 0.82rem;
+            padding: 6px 14px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        
+        .weight-info {
+            display: flex;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .live-w {
+            color: var(--accent);
+            font-weight: 800;
+        }
+        
+        .dress-w {
+            color: var(--red);
+            font-weight: 800;
+        }
+        
+        .no-data, .error-data {
+            text-align: center;
+            padding: 60px 30px;
+            color: #666;
+            font-size: 1rem;
+            background-color: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .no-data p, .error-data p {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #555;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+        
+        .tactical-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #555;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.85rem;
+                letter-spacing: 2px;
+            }
+            
+            .card img {
+                height: 260px;
+            }
+            
+            .status-bar {
+                padding: 12px 16px;
+            }
+        }
+        
+        .sync-status {
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+            margin-top: -12px;
+            margin-bottom: 20px;
+            min-height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <h1>AREA 51 TACTICAL</h1>
+        <div class="subtitle">SECURE FIELD CONSOLE • v0.9.2</div>
+        
+        <!-- STATUS BAR -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span>🔋</span>
+                <span id="battery">Battery: 94%</span>
+            </div>
+            <div class="status-item">
+                <span>📶</span>
+                <span id="signal">Signal: ROGERS 5G</span>
+            </div>
+        </div>
+        
+        <!-- SYNC BUTTON -->
+        <button id="syncBtn" class="sync-btn" onclick="Trigger_Sync()">
+            📡 FORCE SD CARD SYNC
+        </button>
+        <div id="syncStatus" class="sync-status"></div>
+        
+        <!-- INTEL FEED -->
+        <div id="intelFeed" class="intel-feed">
+            <!-- Populated dynamically by JavaScript -->
+        </div>
+        
+        <div class="footer">
+            LAST SYNC: <span id="lastSync">JUST NOW</span> • <span style="color:#39FF14">CONNECTED</span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // AREA 51 TACTICAL - CLIENT ENGINE (Module 6)
+        // ============================================
+        
+        let sightings = [
+            {
+                id: 1,
+                url: "https://picsum.photos/id/1016/800/600",
+                detected: "DEER",
+                points: 94,
+                age: "MATURE",
+                weight_live: "248 lbs",
+                weight_dressed: "181 lbs"
+            },
+            {
+                id: 2,
+                url: "https://picsum.photos/id/1005/800/600",
+                detected: "MOOSE",
+                points: 87,
+                age: "ADULT",
+                weight_live: "920 lbs",
+                weight_dressed: "612 lbs"
+            },
+            {
+                id: 3,
+                url: "https://picsum.photos/id/160/800/600",
+                detected: "BEAR",
+                points: 91,
+                age: "ADULT",
+                weight_live: "412 lbs",
+                weight_dressed: "289 lbs"
+            },
+            {
+                id: 4,
+                url: "https://picsum.photos/id/251/800/600",
+                detected: "COYOTE",
+                points: 78,
+                age: "YEARLING",
+                weight_live: "38 lbs",
+                weight_dressed: "24 lbs"
+            }
+        ];
+        
+        let nextId = 5;
+        
+        // Sample pool for new syncs (simulates new SD card arrivals)
+        const samplePool = [
+            { detected: "DEER", points: 96, age: "FAWN", weight_live: "92 lbs", weight_dressed: "61 lbs" },
+            { detected: "BEAR", points: 89, age: "MATURE", weight_live: "487 lbs", weight_dressed: "341 lbs" },
+            { detected: "MOOSE", points: 82, age: "ADULT", weight_live: "765 lbs", weight_dressed: "498 lbs" },
+            { detected: "BOBCAT", points: 85, age: "ADULT", weight_live: "27 lbs", weight_dressed: "18 lbs" },
+            { detected: "DEER", points: 91, age: "YEARLING", weight_live: "156 lbs", weight_dressed: "104 lbs" },
+            { detected: "TURKEY", points: 94, age: "ADULT", weight_live: "19 lbs", weight_dressed: "14 lbs" }
+        ];
+        
+        function getRandomImageUrl() {
+            // Trail cam friendly nature / wildlife images from Picsum
+            const ids = [29, 30, 1016, 1005, 160, 251, 201, 133, 180, 1033, 1040, 106];
+            const randomId = ids[Math.floor(Math.random() * ids.length)];
+            return `https://picsum.photos/id/${randomId}/800/600`;
+        }
+        
+        function createRandomSighting() {
+            const sample = samplePool[Math.floor(Math.random() * samplePool.length)];
+            return {
+                id: nextId++,
+                url: getRandomImageUrl(),
+                detected: sample.detected,
+                points: sample.points,
+                age: sample.age,
+                weight_live: sample.weight_live,
+                weight_dressed: sample.weight_dressed
+            };
+        }
+        
+        // ============================================
+        // INITIALIZE CONSOLE STATE (Module 6)
+        // ============================================
+        function Initialize_Console_State() {
+            console.log("%c[AREA51] Initializing tactical console...", "color:#39FF14");
+            
+            // Load telemetry
+            Query_System_Telemetry();
+            
+            // Load historical sightings
+            Fetch_Sighting_History();
+            
+            // Simulate occasional telemetry drift (realistic field device)
+            setInterval(() => {
+                if (!document.getElementById("syncBtn").disabled) {
+                    simulateTelemetryDrift();
+                }
+            }, 45000);
+            
+            // Set initial last sync time
+            updateLastSyncTime();
+        }
+        
+        function updateLastSyncTime() {
+            const el = document.getElementById("lastSync");
+            if (!el) return;
+            
+            const now = new Date();
+            el.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        function simulateTelemetryDrift() {
+            const batteryEl = document.getElementById("battery");
+            const signalEl = document.getElementById("signal");
+            
+            if (!batteryEl || !signalEl) return;
+            
+            // Slight battery drain simulation
+            let currentBattery = parseInt(batteryEl.textContent.match(/\d+/)[0]);
+            if (currentBattery > 65) {
+                currentBattery -= Math.floor(Math.random() * 2) + 1;
+                batteryEl.innerHTML = `🔋 Battery: ${currentBattery}%`;
+            }
+            
+            // Occasionally change signal quality
+            if (Math.random() > 0.7) {
+                const signals = ["ROGERS 5G", "ROGERS LTE", "STRONG", "FAIR"];
+                signalEl.innerHTML = `📶 Signal: ${signals[Math.floor(Math.random() * signals.length)]}`;
+            }
+        }
+        
+        // ============================================
+        // QUERY SYSTEM TELEMETRY
+        // ============================================
+        function Query_System_Telemetry() {
+            // In real version: CALL_API_GET("/api/status")
+            // For prototype we simulate realistic values
+            
+            try {
+                // Simulate API response
+                const telemetry = {
+                    battery: Math.floor(Math.random() * 12) + 87, // 87-98%
+                    signal: ["ROGERS 5G", "ROGERS LTE", "STRONG", "EXCELLENT"][Math.floor(Math.random() * 4)]
+                };
+                
+                // Update DOM
+                const batteryEl = document.getElementById("battery");
+                const signalEl = document.getElementById("signal");
+                
+                if (batteryEl) batteryEl.innerHTML = `🔋 Battery: ${telemetry.battery}%`;
+                if (signalEl) signalEl.innerHTML = `📶 Signal: ${telemetry.signal}`;
+                
+                console.log("%c[AREA51] Telemetry updated", "color:#666");
+            } catch (err) {
+                console.error("Telemetry error:", err);
+                const batteryEl = document.getElementById("battery");
+                const signalEl = document.getElementById("signal");
+                if (batteryEl) batteryEl.innerHTML = "🔋 Battery: Offline";
+                if (signalEl) signalEl.innerHTML = "📶 Signal: Unknown";
+            }
+        }
+        
+        // ============================================
+        // FETCH SIGHTING HISTORY (from "local DB")
+        // ============================================
+        function Fetch_Sighting_History() {
+            const feed = document.getElementById("intelFeed");
+            if (!feed) return;
+            
+            feed.innerHTML = "";
+            
+            if (sightings.length === 0) {
+                feed.innerHTML = `
+                    <div class="no-data">
+                        <p>📭 No targets logged.</p>
+                        <p style="font-size:0.85rem; margin-top:8px;">Run a cellular sync to pull new SD card data.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render each sighting card (exact structure from Module 5 spec)
+            sightings.forEach(sighting => {
+                const cardHTML = `
+                    <div class="card">
+                        <img src="${sighting.url}" alt="${sighting.detected} sighting" 
+                             onerror="this.src='https://picsum.photos/id/1016/800/600'">
+                        <div class="card-body">
+                            <div class="card-row">
+                                <span class="tag">${sighting.detected} (${sighting.points} PT)</span>
+                                <span class="tag-age">AGE: ${sighting.age}</span>
+                            </div>
+                            <div class="weight-info">
+                                <span>⚖️ Live: <span class="live-w">${sighting.weight_live}</span></span>
+                                <span>🔪 Dressed: <span class="dress-w">${sighting.weight_dressed}</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                feed.insertAdjacentHTML("beforeend", cardHTML);
+            });
+            
+            console.log(`%c[AREA51] Rendered ${sightings.length} intel cards`, "color:#39FF14");
+        }
+        
+        // ============================================
+        // TRIGGER SYNC (POST /api/sync)
+        // ============================================
+        async function Trigger_Sync() {
+            const syncBtn = document.getElementById("syncBtn");
+            const statusEl = document.getElementById("syncStatus");
+            
+            if (!syncBtn) return;
+            
+            // Lock interface (per spec)
+            syncBtn.disabled = true;
+            syncBtn.innerHTML = `⚡ ANALYZING ROGERS LINK...`;
+            if (statusEl) statusEl.textContent = "Establishing secure cellular tunnel...";
+            
+            try {
+                // Simulate network latency + processing (real device would take longer)
+                await new Promise(resolve => setTimeout(resolve, 1350));
+                
+                if (statusEl) statusEl.textContent = "Scanning SD card for new frames...";
+                await new Promise(resolve => setTimeout(resolve, 950));
+                
+                if (statusEl) statusEl.textContent = "Running OpenCV classification...";
+                await new Promise(resolve => setTimeout(resolve, 1100));
+                
+                // Simulate how many new targets were found (0-3)
+                const newCount = Math.floor(Math.random() * 3) + 1;
+                
+                // Add new sightings to our local array
+                for (let i = 0; i < newCount; i++) {
+                    const newSighting = createRandomSighting();
+                    sightings.unshift(newSighting); // newest on top
+                }
+                
+                // Success feedback (per spec)
+                alert(`✅ Sync Complete! Found ${newCount} new target${newCount > 1 ? 's' : ''}.`);
+                
+                // Refresh the entire intel feed
+                Fetch_Sighting_History();
+                
+                // Update telemetry after sync (battery might have dropped slightly)
+                Query_System_Telemetry();
+                updateLastSyncTime();
+                
+                if (statusEl) statusEl.textContent = `${newCount} new intel packages processed.`;
+                
+                // Clear status after a few seconds
+                setTimeout(() => {
+                    if (statusEl) statusEl.textContent = "";
+                }, 4200);
+                
+            } catch (error) {
+                console.error("Sync failed:", error);
+                alert("⚠️ Sync failed. Check hardware power or Rogers cell signal strength.");
+                if (statusEl) statusEl.textContent = "Sync error. Check device connection.";
+            } finally {
+                // Always unlock button (per spec FINALLY block)
+                syncBtn.disabled = false;
+                syncBtn.innerHTML = `📡 FORCE SD CARD SYNC`;
+            }
+        }
+        
+        // ============================================
+        // BOOT SEQUENCE
+        // ============================================
+        function bootConsole() {
+            console.log("%c[AREA51] Booting tactical field console...", "color:#39FF14; font-weight:bold");
+            
+            // Initialize everything
+            Initialize_Console_State();
+            
+            // Easter egg: Konami code or triple click header for fun
+            let clickCount = 0;
+            const header = document.querySelector("h1");
+            if (header) {
+                header.addEventListener("click", () => {
+                    clickCount++;
+                    if (clickCount >= 5) {
+                        header.style.transition = "all 0.3s";
+                        header.style.transform = "scale(1.1)";
+                        setTimeout(() => {
+                            header.style.transform = "scale(1)";
+                            clickCount = 0;
+                        }, 600);
+                        
+                        // Bonus: force a telemetry refresh
+                        Query_System_Telemetry();
+                    }
+                });
+            }
+            
+            console.log("%c[AREA51] Console ready. Awaiting operator input.", "color:#666");
+        }
+        
+        // Boot on page load
+        window.onload = bootConsole;
+        
+        // Allow manual telemetry refresh by clicking status bar (dev convenience)
+        document.addEventListener("DOMContentLoaded", () => {
+            const statusBar = document.querySelector(".status-bar");
+            if (statusBar) {
+                statusBar.style.cursor = "pointer";
+                statusBar.title = "Click to refresh telemetry";
+                statusBar.addEventListener("click", () => {
+                    Query_System_Telemetry();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
